@@ -20,6 +20,14 @@ class Bug11728Test extends BaseTestCase
     public function testWhetherPluginOutputPreservesCharacterAfterComma()
     {
         $helper = new Zend_View_Helper_PluginOutput();
-        $this->assertTrue(strpos($helper->pluginOutput('<a href="#">A,BC', true), 'BC') !== false);
+
+        $oldErrorReportingLevel = error_reporting();
+        error_reporting($oldErrorReportingLevel & ~ E_DEPRECATED);
+
+        $pluginOutput = $helper->pluginOutput('<a href="#">A,BC', true);
+
+        error_reporting($oldErrorReportingLevel);
+
+        $this->assertTrue(strpos($pluginOutput, 'BC') !== false);
     }
 }
